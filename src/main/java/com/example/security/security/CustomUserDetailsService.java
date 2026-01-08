@@ -22,6 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı: " + username));
 
+        System.out.println("Giriş yapmaya çalışan: " + user.getUsername());
+        System.out.println("DB'deki Rolü: " + user.getRole());
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())

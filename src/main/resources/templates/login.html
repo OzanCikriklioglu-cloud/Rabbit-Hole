@@ -1,11 +1,50 @@
-<h2>Giriş Yap</h2>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="/style.css">
+    <title>The Burrow | Login</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-<form action="/login" method="post">
-    <input type="text" name="username" placeholder="Kullanıcı Adı" required><br>
-    <input type="password" name="password" placeholder="Şifre" required><br>
-    <button type="submit">Giriş Yap</button>
-</form>
-<br>
-<a href="/">Ana Sayfaya Dön</a>
+<body class="terminal-body">
+<div class="login-container">
+    <h2 style="color: #ff0000;">[ IDENT_CHECK ]</h2>
+
+    <div th:if="${param.error == 'captcha'}" style="color: #ffb800; margin-bottom: 15px; font-size: 0.8rem;">
+        [SYSTEM_ERROR]: CAPTCHA_VERIFICATION_FAILED.
+    </div>
+    <div th:if="${param.error != null and param.error != 'captcha'}" style="color: #ff0000; margin-bottom: 15px; font-size: 0.8rem;">
+        [SYSTEM_ERROR]: AUTHENTICATION_FAILED. ACCESS_DENIED.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="input-group">
+            <span style="color: #ffffff;">USER:</span>
+            <input type="text" name="username" placeholder="enter_username..." required autofocus>
+        </div>
+
+        <div class="input-group">
+            <span style="color: #ffffff;">PASS:</span>
+            <input type="password" name="password" placeholder="enter_password..." required>
+        </div>
+
+        <div class="g-recaptcha"
+             th:data-sitekey="${siteKey}"
+             style="margin: 15px 0; transform:scale(0.85); transform-origin:0 0;">
+        </div>
+
+        <br>
+        <button type="submit" class="btn-retro">[_CONTINUE_]</button>
+    </form>
+
+    <br>
+    <div style="margin-top: 10px;">
+        <a href="/register" style="color: #00ff41; text-decoration: none; font-size: 0.7rem;">[ CREATE_NEW_VAULT ]</a>
+    </div>
+    <br>
+    <a href="/" style="color: whitesmoke; text-decoration: none; font-size: 0.7rem;">
+        < EXIT_TO_SURFACE
+    </a>
+</div>
+</body>
+</html>

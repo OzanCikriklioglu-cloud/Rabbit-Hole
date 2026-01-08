@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>The Burrow | User Registry</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="terminal-body">
+<div class="container">
+    <h2 style="color: #00ff41;">[ CLASSIFIED_USER_REGISTRY ]</h2>
+    <p style="color: #ffffff; font-size: 0.8rem;">Sistemde kayıtlı olan tüm varlıklar listeleniyor...</p>
 
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; color: #00ff41; font-family: monospace;">
+        <thead>
+        <tr style="border-bottom: 2px solid #333;">
+            <th style="text-align: left; padding: 10px;">ID</th>
+            <th style="text-align: left; padding: 10px;">USERNAME</th>
+            <th style="text-align: left; padding: 10px;">ROLE</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" style="border-bottom: 1px solid #222;">
+            <td style="padding: 10px;" th:text="${user.id}"></td>
+            <td style="padding: 10px;" th:text="${user.username}"></td>
+            <td style="padding: 10px;">
+                    <span th:text="${user.role}"
+                          th:style="${user.role == 'ROLE_ADMIN' ? 'color: #ff0000;' : 'color: #00ff41;'}">
+                    </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/dashboard" style="color: whitesmoke; text-decoration: none; font-size: 0.8rem;">[ < RETURN_TO_DASHBOARD ]</a>
+</div>
 </body>
 </html>

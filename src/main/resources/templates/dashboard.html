@@ -1,13 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dijital Kasa</title>
+    <title>The Burrow | Vault</title>
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<h1>🔒 Dijital Çelik Kasanız</h1>
-<p>Başarıyla giriş yaptınız. Burası sizin gizli odanız.</p>
-<a href="/logout">Çıkış Yap</a>
+<body class="terminal-body">
+
+<div class="container">
+    <h1 style="color: #ff0000;">Welcome <span th:text="${username}"></span></h1>
+    <p style="color: #ffffff;">Welcome to your secure burrow. Data is encrypted and isolated.</p>
+
+    <div class="input-section">
+        <form th:action="@{/dashboard/add}" method="post">
+            <p style="color: #ff0000;">[SİSTEME_VERİ_GİRİŞİ]:</p>
+            <textarea name="content" placeholder="Şifrelenecek veriyi girin..." required></textarea>
+            <br>
+            <button type="submit" class="btn-retro">VERİYİ_MÜHÜRLE (SEAL)</button>
+        </form>
+    </div>
+
+    <hr style="border: 1px solid #333; margin: 20px 0;">
+
+    <div class="vault-section">
+        <h3 style="color: #ffffff;"> SAKLANAN_VARLIKLAR:</h3>
+        <div th:each="note : ${notes}" class="note-box">
+            <small style="color: #ff0000;">[ID: #<span th:text="${note.id}"></span>]</small>
+            <p th:text="${note.content}"></p>
+            <span style="color: #00ff41; font-size: 10px;">[STATUS: SECURED]</span>
+        </div>
+
+        <div th:if="${notes.empty}">
+            <p style="color: #666;">Kasanız şu an boş. Veri mühürlemek için yukarıyı kullanın.</p>
+        </div>
+    </div>
+
+    <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+        <a href="/admin/users" style="color: red; font-weight: bold;">[ ACCESS_ADMIN_PANEL ]</a>
+    </div>
+
+    <br>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-link" style="background:none; border:none; color:whitesmoke; cursor:pointer;">
+            [ TERMINATE_SESSION ]
+        </button>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    // Sayfa yüklendiğinde veya geri gelindiğinde çalışır
+    window.onpageshow = function(event) {
+        // event.persisted true ise sayfa cache'den (geri tuşuyla) gelmiş demektir
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+            // Sayfayı sunucudan tekrar yükle (Spring Security devreye girer)
+            window.location.reload();
+        }
+    };
+</script>
+
 </body>
 </html>
