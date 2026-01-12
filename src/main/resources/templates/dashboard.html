@@ -15,17 +15,17 @@
         <form th:action="@{/dashboard/add}" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-            <p style="color: #ff0000;">[SİSTEME_VERİ_GİRİŞİ]:</p>
-            <textarea name="content" placeholder="Şifrelenecek veriyi girin..." required></textarea>
+            <p style="color: #ff0000;">[DATA_ENTRY_INTO_THE_SYSTEM]:</p>
+            <textarea name="content" placeholder="Enter the data to be encrypted..." required></textarea>
             <br>
-            <button type="submit" class="btn-retro">VERİYİ_MÜHÜRLE (SEAL)</button>
+            <button type="submit" class="btn-retro">SEAL THE DATA</button>
         </form>
     </div>
 
     <hr style="border: 1px solid #333; margin: 20px 0;">
 
     <div class="vault-section">
-        <h3 style="color: #ffffff;"> SAKLANAN_VARLIKLAR:</h3>
+        <h3 style="color: #ffffff;"> HIDDEN_ASSETS:</h3>
         <div th:each="note : ${notes}" class="note-box" style="position: relative; margin-bottom: 15px; border: 1px solid #333; padding: 10px;">
             <small style="color: #ff0000;">[ID: #<span th:text="${note.id}"></span>]</small>
             <p th:text="${note.content}"></p>
@@ -40,7 +40,7 @@
         </div>
 
         <div th:if="${notes.empty}">
-            <p style="color: #666;">Kasanız şu an boş. Veri mühürlemek için yukarıyı kullanın.</p>
+            <p style="color: #666;">Empty... For now..</p>
         </div>
     </div>
 
