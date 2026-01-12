@@ -17,17 +17,29 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Admin için kullanıcı listeleme
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public void registerUser(String username, String password) {
+        // --- VALIDATION KONTROLÜ (MADDE 1) ---
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required.");
+        }
+        if (password == null || password.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long.");
+        }
+
+        // Kullanıcı adı zaten var mı kontrolü (Unique Constraint)
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new IllegalStateException("Username already exists in the system.");
+        }
+
         User user = new User();
         user.setUsername(username);
-        // Şifreyi hashleyerek kaydediyoruz!
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole("ROLE_USER"); // Yeni kayıt olan herkes standart kullanıcıdır
+        user.setRole("ROLE_USER");
+
         userRepository.save(user);
     }
 }

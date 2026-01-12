@@ -16,7 +16,7 @@ public class CaptchaService {
     public boolean verify(String responseToken) {
         RestTemplate restTemplate = new RestTemplate();
 
-        // Google'a POST isteği atıyoruz
+        // Google POST isteği
         String url = String.format("%s?secret=%s&response=%s", GOOGLE_VERIFY_URL, SECRET_KEY, responseToken);
         Map<String, Object> response = restTemplate.postForObject(url, null, Map.class);
 

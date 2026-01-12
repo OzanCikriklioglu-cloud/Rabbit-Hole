@@ -1,15 +1,14 @@
 package com.example.security.controller;
 
-import com.example.security.entity.Note;
 import com.example.security.entity.User;
-import com.example.security.repository.NoteRepository;
 import com.example.security.repository.UserRepository;
+import com.example.security.service.NoteService; // Yeni eklediğimiz servis
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @Controller
@@ -17,22 +16,24 @@ import java.security.Principal;
 public class DashboardController {
 
     @Autowired
-    private NoteRepository noteRepository;
+    private NoteService noteService; // İş mantığını buraya taşıdık
 
     @Autowired
     private UserRepository userRepository;
 
     @GetMapping
-    public String dashboard(Model model, Principal principal) {
-        // 1. Giriş yapan kullanıcının adını al
-        String username = principal.getName();
+    public String dashboard(Model model, Principal principal, HttpServletResponse response) {
+        // Tarayıcı önbelleğini temizleme (Logout sonrası geri tuşunu engeller)
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
 
-        // 2. Kullanıcıyı DB'den bul
+        String username = principal.getName();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // 3. SADECE bu kullanıcıya ait notları modele ekle (Data Isolation)
-        model.addAttribute("notes", noteRepository.findByUser(user));
+        // DTO dönüşümü ve veri çekme artık NoteService içinde yapılıyor
+        model.addAttribute("notes", noteService.getNotesForUser(user));
         model.addAttribute("username", username);
 
         return "dashboard";
@@ -40,14 +41,22 @@ public class DashboardController {
 
     @PostMapping("/add")
     public String addNote(@RequestParam String content, Principal principal) {
-        String username = principal.getName();
-        User user = userRepository.findByUsername(username).get();
+        User user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Note note = new Note();
-        note.setContent(content);
-        note.setUser(user);
+        // Kayıt işlemi servise devredildi
+        noteService.createNote(content, user);
+        return "redirect:/dashboard";
+    }
 
-        noteRepository.save(note);
+    @PostMapping("/delete/{id}")
+    public String deleteNote(@PathVariable Long id, Principal principal) {
+        // Yetki kontrolü ve silme işlemi servis içinde merkezi olarak yapılıyor
+        try {
+            noteService.deleteNote(id, principal.getName());
+        } catch (SecurityException e) {
+            return "redirect:/dashboard?error=unauthorized";
+        }
         return "redirect:/dashboard";
     }
 }

@@ -7,10 +7,16 @@
 </head>
 <body class="terminal-body">
 <div class="login-container">
-    <h2 style="color: #00ff41;">[ NEW_VAULT_CREATION ]</h2>
+    <h2 style="color: red;">[ NEW_VAULT_CREATION ]</h2>
     <p style="color: #ffffff; font-size: 0.7rem; margin-bottom: 20px;">SYSTEM: ENTER CREDENTIALS FOR ENCRYPTION</p>
 
+    <div th:if="${error}" style="color: #ffb800; margin-bottom: 15px; font-size: 0.8rem;">
+        [REGISTRATION_ERROR]: <span th:text="${error}"></span>
+    </div>
+
     <form th:action="@{/register}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
         <div class="input-group">
             <span style="color: #ffffff;">USER:</span>
             <input type="text" name="username" placeholder="choose_username..." required autofocus>
@@ -18,11 +24,11 @@
 
         <div class="input-group">
             <span style="color: #ffffff;">PASS:</span>
-            <input type="password" name="password" placeholder="create_password..." required>
+            <input type="password" name="password" placeholder="min_6_characters..." required>
         </div>
 
         <br>
-        <button type="submit" class="btn-retro" style="border-color: #00ff41; color: #00ff41;">[_INITIATE_SEQUENCE_]</button>
+        <button type="submit" class="btn-retro" style="border-color: #00ff41; color: red;">[_GO_TO_YOUR_BURROW_]</button>
     </form>
 
     <br>

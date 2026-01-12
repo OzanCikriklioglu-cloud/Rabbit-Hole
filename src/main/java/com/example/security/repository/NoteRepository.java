@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
+    // Sadece belirli bir kullanıcıya ait notları getiren can alıcı metod:
     List<Note> findByUser(User user);
+
 }

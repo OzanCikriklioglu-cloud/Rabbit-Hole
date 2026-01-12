@@ -24,30 +24,32 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // --- EKLEDİĞİMİZ KISIM: TARAYICI ÖNBELLEĞİNİ (CACHE) DEVRE DIŞI BIRAKIR ---
-                // Bu ayar, logout olduktan sonra geri tuşuna basıldığında eski sayfanın görünmesini engeller.
+                // CSRF koruması varsayılan olarak açıktır.
+                // Hoca istediği için buraya dokunmuyoruz (disable etmiyoruz).
+
                 .headers(headers -> headers
                         .cacheControl(cache -> cache.disable())
                 )
-                // -----------------------------------------------------------------------
-
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/register", "/style.css").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/style.css", "/error").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                // Captcha kontrolünü kullanıcı adı/şifre kontrolünden hemen önceye koyuyoruz
                 .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .formLogin(login -> login
                         .loginPage("/login")
                         .defaultSuccessUrl("/dashboard", true)
+                        .failureUrl("/login?error=true") // Hatalı girişte buraya atar
                         .permitAll()
                 )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true) // Session'ı geçersiz kıl
-                        .clearAuthentication(true)   // Yetkileri temizle
-                        .deleteCookies("JSESSIONID") // Çerezleri sil
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
 
