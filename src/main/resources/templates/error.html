@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hata - Security Vault</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="error-page">
+<div class="container">
+    <h1 style="color: #ff4141;"> Upps something went wrong :( </h1>
+    <h1 style="color: #ff4141;"> Upps something went wrong :( </h1>
+    <p th:text="${message}"></p>
+    <div style="background: #111; padding: 10px; border-radius: 5px; margin-top: 20px;">
+        <code style="color: #00ff41;" th:text="${detail}"></code>
+    </div>
+    <br>
+    <a href="/dashboard" class="btn">Geri Dön</a>
+</div>
+</body>
+</html>
