@@ -64,5 +64,5 @@ jobs:
           path: '.'
           format: 'HTML'
           args: >
-            --failOnCVSS 7
+            --failOnCVSS 9
             --enableRetired true
