@@ -53,12 +53,14 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco/
 
-      # 4. MADDE: SECURITY SCANNING (OWASP)
+      # 4. MADDE: SECURITY SCANNING (OWASP) - Daha stabil versiyon
       - name: Dependency Check
-        uses: dependency-check/Dependency-Check_Action@main
+        uses: dependency-check/Dependency-Check_Action@1.1.0
         with:
           project: 'Rabbit-Hole'
           path: '.'
           format: 'HTML'
+          out: 'reports'
           args: >
             --failOnCVSS 7
+            --enableRetired true
