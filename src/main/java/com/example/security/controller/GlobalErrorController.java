@@ -13,8 +13,7 @@ public class GlobalErrorController {
         // Hata mesajını loglayabiliriz (isteğe bağlı)
         System.err.println("Global Error: " + ex.getMessage());
 
-        // Kullanıcıya sistemin iç detaylarını (stack trace gibi) vermiyoruz
-        // Sadece güvenli bir hata mesajı geçiyoruz
+        // information leakage engellemek icin kendi hata mesaimizi atiyoruz.
         model.addAttribute("message", "Beklenmedik bir sorun oluştu. Lütfen daha sonra tekrar deneyiniz.");
         model.addAttribute("detail", ex.getMessage()); // Hocanın görmesi için detayı da ekledik
 

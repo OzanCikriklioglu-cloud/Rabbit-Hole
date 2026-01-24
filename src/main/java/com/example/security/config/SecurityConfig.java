@@ -66,11 +66,11 @@ public class SecurityConfig {
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .deleteCookies("JSESSIONID")
+                        .logoutUrl("/logout")    //cikis yapilicak adres
+                        .logoutSuccessUrl("/")   //cikis sonrasi gidicilcek yer
+                        .invalidateHttpSession(true) //sunucu tarafindaki session i yok eder
+                        .clearAuthentication(true)  // authentication i temizler
+                        .deleteCookies("JSESSIONID") // anahtar cerezi sil
                         .permitAll()
                 );
 

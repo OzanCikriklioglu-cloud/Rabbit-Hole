@@ -4,6 +4,8 @@ import com.example.security.dto.NoteDTO;
 import com.example.security.entity.Note;
 import com.example.security.entity.User;
 import com.example.security.repository.NoteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,16 +40,23 @@ public class NoteService {
     }
 
     // SİLME MANTIĞI: Hocanın en önem verdiği güvenlik kontrolü (Data Isolation)
+    private static final Logger logger = LoggerFactory.getLogger(NoteService.class);
+
     public void deleteNote(Long id, String currentUsername) {
         Note note = noteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("System Error: Resource not found."));
+                .orElseThrow(() -> {
+                    logger.error("Resource not found: User {} tried to delete non-existent Note ID {}", currentUsername, id);
+                    return new RuntimeException("System Error: Resource not found.");
+                });
 
-        // Güvenlik Duvarı: Notun sahibi, silmek isteyen kişi mi?
         if (!note.getUser().getUsername().equals(currentUsername)) {
-            // Eğer biri ID tahmin ederek başkasının notunu silmeye çalışırsa burası engeller
-            throw new SecurityException("Security Alert: Unauthorized deletion attempt!");
+            // KRİTİK LOG: Güvenlik ihlali girişimi
+            logger.error("SECURITY ALERT: User '{}' attempted to delete Note ID {} which belongs to '{}'!",
+                    currentUsername, id, note.getUser().getUsername());
+            throw new SecurityException("Unauthorized deletion attempt!");
         }
 
         noteRepository.delete(note);
+        logger.info("Note ID {} successfully deleted by user '{}'", id, currentUsername);
     }
 }

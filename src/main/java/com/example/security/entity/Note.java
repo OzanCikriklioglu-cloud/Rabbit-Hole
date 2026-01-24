@@ -3,10 +3,6 @@ package com.example.security.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-/**
- * The Rabbit Hole - Encrypted Asset Entity
- * v0.4.0 - Data Isolation Edition
- */
 @Entity
 @Table(name = "notes") // Veritabanında 'notes' tablosuna denk gelir
 @Getter

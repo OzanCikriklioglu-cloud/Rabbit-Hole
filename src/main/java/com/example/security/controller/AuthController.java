@@ -41,10 +41,16 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password, Model model) {
         try {
+            // Şifre politikası kontrolünü burada (veya tercihen UserService içinde) yapıyoruz
+            String passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+            if (!password.matches(passwordPattern)) {
+                model.addAttribute("error", "Password must be at least 8 characters long and include numbers, uppercase, and lowercase letters.");
+                return "register";
+            }
+
             userService.registerUser(username, password);
             return "redirect:/login?registered=true";
         } catch (Exception e) {
-            // Hata mesajını HTML'e gönderiyoruz
             model.addAttribute("error", e.getMessage());
             return "register";
         }
