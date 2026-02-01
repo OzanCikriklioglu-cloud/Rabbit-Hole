@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+//sb'un standart UDS interface ini inplement ediyoruz
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -26,8 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    logger.warn("Login failed: User {} not found in database", username);
-                    return new UsernameNotFoundException("Kullanıcı bulunamadı");
+                    logger.warn("Login failed: User {} not found.", username);
+                    return new UsernameNotFoundException("User not found");
                 });
 
         logger.info("User {} successfully loaded from DB with role: {}", user.getUsername(), user.getRole());

@@ -14,7 +14,7 @@ public class GlobalErrorController {
         System.err.println("Global Error: " + ex.getMessage());
 
         // information leakage engellemek icin kendi hata mesaimizi atiyoruz.
-        model.addAttribute("message", "Beklenmedik bir sorun oluştu. Lütfen daha sonra tekrar deneyiniz.");
+        model.addAttribute("message", "Unexpected problem.");
         model.addAttribute("detail", ex.getMessage()); // Hocanın görmesi için detayı da ekledik
 
         return "error"; // src/main/resources/templates/error.html dosyasını arar

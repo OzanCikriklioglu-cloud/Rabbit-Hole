@@ -17,6 +17,7 @@ public class SecurityConfig {
     @Autowired
     private CaptchaFilter captchaFilter;
 
+    //uygulamaya bcrypt sagliyor
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .formLogin(login -> login
                         .loginPage("/login")

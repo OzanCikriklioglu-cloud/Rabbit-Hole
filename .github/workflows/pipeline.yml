@@ -10,7 +10,6 @@ jobs:
   build-test-and-scan:
     runs-on: ubuntu-latest
 
-    # BURASI ÇOK KRİTİK: Testlerin çalışması için Postgres'i GitHub açacak
     services:
       postgres:
         image: postgres:15
@@ -36,7 +35,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Testleri koştururken veritabanı şifrelerini kasadan (secrets) alıyoruz
       - name: Build and Test with Maven
         run: mvn clean verify
         env:
@@ -53,16 +51,24 @@ jobs:
           name: jacoco-report
           path: target/site/jacoco/
 
-      # 4. MADDE: SECURITY SCANNING (OWASP)
-      - name: Dependency Check
+      # OWASP Dependency Check (Mevcut olanı iyileştirdik)
+      - name: Dependency Check Scan
         uses: dependency-check/Dependency-Check_Action@main
+        id: DepCheck
         env:
-          # Burası sihirli değnek: Java yolunu Docker imajının beklediği yere resetliyoruz
           JAVA_HOME: /opt/jdk
         with:
           project: 'Rabbit-Hole'
           path: '.'
           format: 'HTML'
           args: >
-            --failOnCVSS 9
+            --failOnCVSS 7
             --enableRetired true
+
+      # Tarama sonucunu (HTML raporunu) GitHub Artifacts'e yükle
+      - name: Upload OWASP Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owasp-security-report
+          path: 'reports'

@@ -22,7 +22,7 @@ public class UserService {
     }
 
     public void registerUser(String username, String password) {
-        // --- VALIDATION KONTROLÜ (MADDE 1) ---
+        // --- VALIDATION Control ---
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username is required.");
         }
