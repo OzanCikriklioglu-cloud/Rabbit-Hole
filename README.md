@@ -1,4 +1,8 @@
 Personal Secure Vault
+
+
+
+
 This is a Spring Boot web application designed to store private notes securely. I built it with a heavy focus on security best practices, including protection against common web vulnerabilities, user authentication, and data isolation.
 
 Key Features
@@ -65,5 +69,3 @@ CSRF Protection: Enabled by default via Spring Security.
 Information Leakage: A GlobalErrorController is used to catch exceptions and show a generic error page instead of leaking system stack traces.
 
 Secure Cookies: HttpOnly, Secure, and SameSite=Strict flags are set to protect session cookies.
-
-Would you like me to add a section on how to specifically test the Data Isolation (deleting another user's note) part for your project demo?
